@@ -494,6 +494,30 @@ public class FirstTest {
 
     }
 
+    @Test
+    public void assertElementPresent(){
+
+        String search_value = "Java";
+        String article_title = "Object-oriented programming language";
+
+
+        //Find articles with 'Java' in search
+        findArticles(search_value);
+
+        //Open the article
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='" + article_title + "']"),
+                "Cannot find " + article_title + " article",
+                15
+        );
+
+        Assert.assertTrue(
+                "The title is not found",
+                getAmountsOfElements(By.id("org.wikipedia:id/view_page_title_text")) > 0
+        );
+
+
+    }
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
