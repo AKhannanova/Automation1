@@ -1,36 +1,57 @@
 package tests;
 
 import lib.CoreTestCase;
+import lib.Platform;
 import lib.ui.ArticlePageObject;
 import lib.ui.MyListPageObject;
 import lib.ui.NavigationUI;
 import lib.ui.SearchPageObject;
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.MyListPageObjectFactory;
+import lib.ui.factories.NavigationUIFactory;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
 public class MyListsTests extends CoreTestCase {
 
+    private static final String name_of_folder = "Learning programming";
+
     @Test
     public void testSaveFirstArticleToMyList(){
 
-        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
-        SearchPageObject.typeSearchLine("Appium");
-        SearchPageObject.clickByArticleWithSubstring("Appium");
+        SearchPageObject.typeSearchLine("Java");
+        SearchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
 
-        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
-
-        ArticlePageObject.waitForTitleElement();
+        ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
+        //ArticlePageObject.waitForTitleElement();
         String article_title = ArticlePageObject.getArticleTitle();
-        String name_of_folder = "Learning programming";
-        ArticlePageObject.addArticleToNewList(name_of_folder);
+
+        if (Platform.getInstance().isAndroid()){
+            ArticlePageObject.addArticleToNewList(name_of_folder);
+        } else{
+            ArticlePageObject.addArticleToMySaved();
+        }
+
         ArticlePageObject.closeArticle();
 
-        NavigationUI NavigationUI = new NavigationUI(driver);
+        if (Platform.getInstance().isIOS()){
+            SearchPageObject.waitForCancelButtonAndClick();
+        }
+
+        NavigationUI NavigationUI = NavigationUIFactory.get(driver);
         NavigationUI.clickMyList();
 
-        MyListPageObject MyListPageObject = new MyListPageObject(driver);
-        MyListPageObject.openFolderByName(name_of_folder);
+        MyListPageObject MyListPageObject = MyListPageObjectFactory.get(driver);
+
+        if (Platform.getInstance().isAndroid()){
+            MyListPageObject.openFolderByName(name_of_folder);
+        } else {
+            MyListPageObject.waitAndClickCloseSyncButton();
+        }
+
         MyListPageObject.swipeByArticleToDelete(article_title);
 
     }
