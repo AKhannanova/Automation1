@@ -1,7 +1,10 @@
 package lib.ui;
-
+import lib.Platform;
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 abstract public class SearchPageObject extends MainPageObject{
 
@@ -13,6 +16,9 @@ abstract public class SearchPageObject extends MainPageObject{
             SEARCH_RESULT_ELEMENT,
             SEARCH_EMPTY_RESULT_ELEMENT,
             SEARCH_RESULT_TITLE_AND_DESCRIPTION_BY_SUBSTRINGS_TPL,
+            ARTICLE_TITLE,
+            RESULT_LIST,
+            ARTICLE_TPL,
             CANCEL_SEARCH_BUTTON;
 
 
@@ -27,6 +33,10 @@ abstract public class SearchPageObject extends MainPageObject{
 
     private static String getResultTitleAndDescription(String substring1, String substring2){
         return SEARCH_RESULT_TITLE_AND_DESCRIPTION_BY_SUBSTRINGS_TPL.replace("{SUBSTRING1}", substring1).replace("{SUBSTRING2}", substring2);
+    }
+
+    private static String getArticleXPath(String i){
+        return ARTICLE_TPL.replace("{i}", i);
     }
     /*TEMPLATE METHODS*/
 
@@ -100,6 +110,22 @@ abstract public class SearchPageObject extends MainPageObject{
           "Cannot find search button",
           15
         );
+    }
+
+    public WebElement getSearchResultList(){
+        return this.waitForElementPresent(
+          RESULT_LIST,
+          "No results",
+          15
+        );
+    }
+
+    public List getArticlesTitlesList(){
+        if (Platform.getInstance().isAndroid()) {
+            return getSearchResultList().findElements(By.id("org.wikipedia:id/page_list_item_title"));
+        } else{
+            return getSearchResultList().findElements(By.xpath("//XCUIElementTypeCell/XCUIElementTypeOther/XCUIElementTypeStaticText[1]"));
+        }
     }
 
 

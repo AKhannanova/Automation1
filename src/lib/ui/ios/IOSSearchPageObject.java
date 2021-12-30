@@ -15,6 +15,9 @@ public class IOSSearchPageObject extends SearchPageObject {
         SEARCH_EMPTY_RESULT_ELEMENT = "xpath://XCUIElementTypeStaticText[@name='No results found']";
         SEARCH_RESULT_TITLE_AND_DESCRIPTION_BY_SUBSTRINGS_TPL = "xpath://XCUIElementTypeStaticText//*[@name='{SUBSTRING1}' or @name='{SUBSTRING2}']";
         CANCEL_SEARCH_BUTTON = "xpath://XCUIElementTypeStaticText[@name='Cancel']";
+        RESULT_LIST = "xpath://XCUIElementTypeApplication[@name='Wikipedia']/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeCollectionView";
+        //ARTICLE_TPL = "xpath://XCUIElementTypeApplication[@name='Wikipedia']/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeCollectionView/XCUIElementTypeCell['{i}']";
+        ARTICLE_TPL = "xpath://XCUIElementTypeCell[{i}]";
     }
 
     public IOSSearchPageObject(AppiumDriver driver){

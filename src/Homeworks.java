@@ -10,9 +10,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import lib.ui.*;
 
+import java.util.List;
+
 public class Homeworks extends CoreTestCase {
 
     private static final String name_of_folder = "My articles";
+
 
     @Test
     public void testSaveTwoArticlesAndDeleteOne(){
@@ -135,5 +138,40 @@ public class Homeworks extends CoreTestCase {
 
     }
 
+    @Test
+    public void testAllArticlesContainSearchValue(){
+        String search_value = "Java";
+        String search_value_low = search_value.toLowerCase();
+
+        SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
+
+        SearchPageObject.initSearchInput(); //get the search field
+        SearchPageObject.typeSearchLine(search_value);    //type "Java" to the search field
+
+        SearchPageObject.waitForSearchResult(search_value); //the search result appears
+
+        List titles_list = SearchPageObject.getArticlesTitlesList();    //get list of article titles
+
+        //check that all articles titles contain the search value
+        for (int i = 0; i < titles_list.size(); i++) {
+                WebElement title = (WebElement) titles_list.get(i);
+                if (Platform.getInstance().isAndroid()){
+                    Assert.assertTrue(
+                            "Does not contain " + search_value,
+                            title.getAttribute("text").toLowerCase().contains(search_value_low)
+                    );
+                } else {
+                    Assert.assertTrue(
+                            "Does not contain " + search_value,
+                            title.getAttribute("name").toLowerCase().contains(search_value_low)
+                    );
+                }
+            }
+        }
 
 }
+
+
+
+
+
