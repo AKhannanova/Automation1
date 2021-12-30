@@ -10,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import lib.ui.*;
 
+import javax.swing.*;
 import java.util.List;
 
 public class Homeworks extends CoreTestCase {
@@ -23,6 +24,7 @@ public class Homeworks extends CoreTestCase {
         String search_value = "Java";
         String description1 = "Object-oriented programming language";
         String description2 = "Indonesian island";
+        String description3 = "Island of Indonesia";
 
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
@@ -50,9 +52,10 @@ public class Homeworks extends CoreTestCase {
         if (Platform.getInstance().isAndroid()){
             SearchPageObject.initSearchInput(); //get the search field
             SearchPageObject.typeSearchLine(search_value);    //type "Java" to the search field
+            SearchPageObject.clickByArticleWithSubstring(description3);  //click the article within the list
+        } else {
+            SearchPageObject.clickByArticleWithSubstring(description2);  //click the article within the list
         }
-
-        SearchPageObject.clickByArticleWithSubstring(description2);    //click the article within the list
 
         //wait until the second article page is loaded
         String article_title2 = ArticlePageObject.getArticleTitle();
@@ -90,17 +93,21 @@ public class Homeworks extends CoreTestCase {
         MyListPageObject.waitForArticleToDisappearByTitle(article_title1);  //Check that the article is removed
 
         //Check that the second article is in the list
-        if (Platform.getInstance().isAndroid()) {
-            MyListPageObject.waitForArticleAppearAndClickByTitle(article_title2);
-            ArticlePageObject.waitForTitleElement();
+
+        if (Platform.getInstance().isAndroid()){
             assertEquals(
-                    "Unexpected title",
-                    article_title2,
-                    ArticlePageObject.getArticleTitle()
+                    "Unexpected description",
+                    description3.toLowerCase(),
+                    MyListPageObject.getDescription(description3).getAttribute("text").toLowerCase()
             );
         } else {
-            MyListPageObject.articleInListForIos(description2);
+            assertEquals(
+                    "Unexpected description",
+                    description2.toLowerCase(),
+                    MyListPageObject.getDescription(description2).getAttribute("name").toLowerCase()
+            );
         }
+
     }
 
     @Test

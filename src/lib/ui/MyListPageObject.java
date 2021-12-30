@@ -112,11 +112,20 @@ abstract public class MyListPageObject extends MainPageObject {
         );
     }
 
-    public void articleInListForIos(String description) {
-        this.waitForElementPresent(
-                getSavedArticleDescriptionXpath(description),
-                "The article is not in the list",
-                10
-        );
+    public WebElement getDescription(String description) {
+        if (Platform.getInstance().isAndroid()) {
+            return this.waitForElementPresent(
+              DESCRIPTION,
+              "Cannot find description",
+              10
+            );
+        } else {
+            return this.waitForElementPresent(
+                    getSavedArticleDescriptionXpath(description),
+                    "Cannot find description",
+                    10
+            );
+        }
     }
 }
+
